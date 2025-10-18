@@ -45,10 +45,12 @@
             justify-content: space-between;
             align-items: center;
             gap: 20px;
+            position: relative;
         }
 
         .cookie-content {
             flex: 1;
+            padding-right: 40px; /* Space for close button */
         }
 
         .cookie-content h3 {
@@ -100,6 +102,30 @@
             background: rgba(52, 152, 219, 0.1);
         }
 
+        /* Close Button for Cookie Popup */
+        .cookie-close-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: none;
+            color: #bdc3c7;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .cookie-close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
         /* Cookie Settings Modal */
         #cookie-settings-modal {
             position: fixed;
@@ -126,6 +152,7 @@
             padding: 30px;
             max-height: 80vh;
             overflow-y: auto;
+            position: relative;
         }
 
         .cookie-modal-header {
@@ -147,6 +174,17 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: #7f8c8d;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(0, 0, 0, 0.05);
         }
 
         .cookie-option {
@@ -688,6 +726,12 @@
             .cookie-container {
                 flex-direction: column;
                 text-align: center;
+                gap: 15px;
+            }
+            
+            .cookie-content {
+                padding-right: 0;
+                padding-top: 10px;
             }
             
             .cookie-buttons {
@@ -755,6 +799,11 @@
             .cookie-buttons {
                 flex-direction: column;
             }
+            
+            .cookie-close-btn {
+                top: 5px;
+                right: 5px;
+            }
         }
     </style>
 </head>
@@ -762,6 +811,7 @@
     <!-- Cookie Consent Popup -->
     <div id="cookie-consent-popup">
         <div class="cookie-container">
+            <button class="cookie-close-btn" id="cookie-close-btn">&times;</button>
             <div class="cookie-content">
                 <h3>Cookie Consent</h3>
                 <p>We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies. You can manage your preferences in Cookie Settings. For more information, please read our <a href="#" onclick="openTab(event, 'privacy')">Privacy Policy</a>.</p>
@@ -1152,6 +1202,7 @@
             const cookieSettingsModal = document.getElementById('cookie-settings-modal');
             const cookieAcceptBtn = document.getElementById('cookie-accept-btn');
             const cookieSettingsBtn = document.getElementById('cookie-settings-btn');
+            const cookieCloseBtn = document.getElementById('cookie-close-btn');
             const closeModalBtn = document.querySelector('.close-modal');
             const saveCookieSettingsBtn = document.getElementById('save-cookie-settings');
             const footerCookieSettings = document.getElementById('footer-cookie-settings');
@@ -1170,6 +1221,14 @@
                 cookiePopup.classList.remove('show');
                 // In a real implementation, you would set all cookies here
                 console.log('All cookies accepted');
+            });
+            
+            // Close cookie popup with X button
+            cookieCloseBtn.addEventListener('click', function() {
+                // When user closes without making a choice, treat it as rejection of non-essential cookies
+                localStorage.setItem('cookieConsent', 'rejected');
+                cookiePopup.classList.remove('show');
+                console.log('Cookie popup closed without accepting');
             });
             
             // Open cookie settings modal
